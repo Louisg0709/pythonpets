@@ -52,10 +52,8 @@ class command:
         return self.command
         
     #trigger an action        
-    def check(self,command):
+    def trigger(self,command):
         event=0
         if self.command == 'help':
-            help=1
             print('help')
         return event
-        

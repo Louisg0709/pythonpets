@@ -14,7 +14,7 @@ from petsclasses import *
 
 game=command()
 requestcommand = game.request()
-checkcommand = game.check(requestcommand)
+triggercommand = game.trigger(requestcommand)
 
 #main loop
 pet1=pet()
@@ -25,4 +25,4 @@ pet1.startpet()
 #pet2.copypet(pet1)
 
 game.request()
-game.check(requestcommand)
+game.trigger(requestcommand)
