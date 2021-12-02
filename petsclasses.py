@@ -4,20 +4,58 @@ Created on Fri Nov 19 16:12:38 2021
 Python Pets classes
 @author: louis
 """
+import time
+import threading
 
 #Main game class
 class game:
+    def runcycle(self, timer):
+        time.sleep(1)
+        timer = timer+1
+        print(timer)
+        
     def __init__(self):
         self.status=1
-        return self
+        self.timer=0
+        self.allpets=zoo()
+        self.score=100
+        self.currentpet=None
+        return None
+    def gettime(self):
+        return self.timer
+    def getcurrentpet(self):
+        return  self.currentpet
+    
+    #cycle loop
+    def cycleloop(self):
+        ntimer=0
+        while True:
+            #ntimer=self.runcycle(ntimer)
+            #self.timer=ntimer
+            ntimer=ntimer+1
+            print('cycleloop',ntimer)
+            time.sleep(5)
+            
+    
+    def startgame(self):
+        print ('For help enter the command help.')
+        pet1=pet()
+        pet1.startpet()
+        self.currentpet=pet1
+        self.allpets.addpet(pet1)
+        cycleloopt = threading.Thread(target=self.cycleloop)
+        cycleloopt.start()
+        
+    
+    
 #Main class that deals with your pets
 class pet:
     def __init__(self):
-        self.name="Bob"
-        self.food=0
-        self.clean=0
-        self.fun=0
-        self.love=0
+        self.food = 5
+        self.clean = 5
+        self.fun = 5
+        self.love = 5
+
         
     def startpet(self):
         self.name = input('What would you like to name your pet?\n')
@@ -69,7 +107,14 @@ class pet:
         if self.love > 10:
             self.love=10
         print(self.name,'now has an affection of',self.love,'.')
-
+    def deplete(self, score, timer):
+        
+        self.food = self.food - timer + score / 100
+        self.clean = self.clean - timer + score / 100
+        self.fun = self.fun - timer + score / 100
+        self.love = self.love - timer + score / 100
+    
+        
 #Class that deals with commands
 class command:
     def __init__(self):
@@ -103,7 +148,6 @@ class command:
             currentpet=self.currentpet
             currentpet.hug()
         return event
-
 #collection class for pets    
 class zoo:
     def __init__(self):
@@ -114,7 +158,7 @@ class zoo:
         self.pets.append(pet)
         self.n=len(self.pets)
         
-    def getpet(self,i):
+    def getpeti(self,i):
         if i<=self.n:
             pet=self.pets[i]
             return pet
