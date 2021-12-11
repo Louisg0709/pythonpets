@@ -10,8 +10,6 @@ import threading
 #Main game class
 class game:
     def runcycle(self, timer):
-        time.sleep(1)
-        timer = timer+1
         print(timer)
         
     def __init__(self):
@@ -28,13 +26,21 @@ class game:
     
     #cycle loop
     def cycleloop(self):
-        ntimer=0
-        while True:
-            #ntimer=self.runcycle(ntimer)
-            #self.timer=ntimer
-            ntimer=ntimer+1
-            print('cycleloop',ntimer)
+        self.status=1
+        while self.status:
+
+            print('cycleloop')
             time.sleep(5)
+
+#not tested
+    def turn(self, status):
+        print('turn')
+        self.requestcommand = self.game.request(self.currentpet)
+        self.triggercommand = self.game.trigger(self.requestcommand)
+        while self.status == 1:
+            self.requestcommand
+            self.triggercommand
+
             
     
     def startgame(self):
