@@ -7,6 +7,13 @@ Python Pets
 #Importing classes
 from petsclasses import *
 
+
 #mainloop
 petgame=game()
 petgame.startgame()
+
+currentpet=petgame.allpets.getpeti(0)
+petgame.currentpet=currentpet
+
+playgame(petgame)
+

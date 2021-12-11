@@ -7,6 +7,17 @@ Python Pets classes
 import time
 import threading
 
+
+def playgame(thegame):
+    status=1
+    currentpet=thegame.getcurrentpet()
+    while status == 1:
+        thecommand=command()
+        requestcommand = thecommand.request(currentpet)
+        thecommand.trigger(requestcommand,thegame)
+
+
+
 #Main game class
 class game:
     def runcycle(self, timer):
@@ -134,24 +145,24 @@ class command:
         return self.command
         
     #trigger an action        
-    def trigger(self,command):
+    def trigger(self,command,tgame):
         event=0
         if self.command == 'help':
             print(self.help)
         if self.command == 'stats':
-            currentpet=self.currentpet
+            currentpet=tgame.currentpet
             currentpet.printstats()
         if self.command == 'feed':
-            currentpet=self.currentpet
+            currentpet=tgame.currentpet
             currentpet.feed()
         if self.command == 'clean':
-            currentpet=self.currentpet
+            currentpet=tgame.currentpet
             currentpet.cleanp()
         if self.command == 'play':
-            currentpet=self.currentpet
+            currentpet=tgame.currentpet
             currentpet.play()
         if self.command == 'hug':
-            currentpet=self.currentpet
+            currentpet=tgame.currentpet
             currentpet.hug()
         return event
 #collection class for pets    
