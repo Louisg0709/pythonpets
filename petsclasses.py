@@ -10,6 +10,7 @@ import threading
 
 def playgame(thegame):
     status=1
+    startthread = 1
     currentpet=thegame.getcurrentpet()
     while status == 1:
         thecommand=command()
@@ -24,6 +25,7 @@ class game:
         print(timer)
         
     def __init__(self):
+        self.game = command()
         self.status=1
         self.timer=0
         self.allpets=zoo()
@@ -36,32 +38,39 @@ class game:
         return  self.currentpet
     
     #cycle loop
-    def cycleloop(self):
+    def cycleloop(self,zoo):   #allpets is a list of pets see zoo class allpets is a member of this game class
         self.status=1
         while self.status:
-
-            print('cycleloop')
-            time.sleep(5)
+             zoo.deplete()
+             #print('cycleloop')
+             time.sleep(1)
 
 #not tested
     def turn(self, status):
-        print('turn')
-        self.requestcommand = self.game.request(self.currentpet)
-        self.triggercommand = self.game.trigger(self.requestcommand)
+        self.game.requestcommand = self.game.request(self.currentpet)
+        self.game.triggercommand = self.game.trigger(self.game.request)
         while self.status == 1:
             self.requestcommand
             self.triggercommand
 
             
     
-    def startgame(self):
+    def startthread(self):
+        cycleloopt = threading.Thread(target=self.cycleloop(self.allpets))
+        cycleloopt.start()
+    
+    def playgame(self):
         print ('For help enter the command help.')
         pet1=pet()
         pet1.startpet()
         self.currentpet=pet1
         self.allpets.addpet(pet1)
-        cycleloopt = threading.Thread(target=self.cycleloop)
-        cycleloopt.start()
+        status=1
+        startthread = 1
+        currentpet= self.getcurrentpet()
+        self.turn(1)
+        self.startthread()
+        
         
     
     
@@ -124,12 +133,12 @@ class pet:
         if self.love > 10:
             self.love=10
         print(self.name,'now has an affection of',self.love,'.')
-    def deplete(self, score, timer):
-        
-        self.food = self.food - timer + score / 100
-        self.clean = self.clean - timer + score / 100
-        self.fun = self.fun - timer + score / 100
-        self.love = self.love - timer + score / 100
+    def deplete(self):
+        score=100
+        self.food = self.food - score / 100 * 0.5
+        self.clean = self.clean - score / 100* 0.5
+        self.fun = self.fun - score/ 100* 0.5
+        self.love = self.love - score / 100* 0.5
     
         
 #Class that deals with commands
@@ -138,10 +147,10 @@ class command:
         self.command="help" 
         self.help = 'Python Pets \nTo view the stats of your pet enter the command stats.\nTo increase your pets energy enter the command feed.\nTo increase your pets happiness use the command play.\nTo increase your pets affection use the command hug.\n To increase your pets cleanliness use the command clean.' 
     #get command from user            
-    def request(self,currentpet):
+    def request(self,incurrentpet):
         #print('command requested')
         self.command=input()
-        self.currentpet=currentpet
+        self.currentpet=incurrentpet
         return self.command
         
     #trigger an action        
@@ -184,5 +193,11 @@ class zoo:
         for pet in self.pets:
             if name == pet.name:
                 return pet
+        return None
+    
+    def deplete(self):
+        for pet in self.pets:
+           pet.deplete()
+
         return None
         
