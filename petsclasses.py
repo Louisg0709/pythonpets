@@ -42,24 +42,25 @@ class game:
         self.status=1
         while self.status:
              zoo.deplete()
-             #print('cycleloop')
+             print('cycleloop')
              time.sleep(1)
 
 #not tested
-    def turn(self, status):
+    def turn(self, status, petgame):
         self.game.requestcommand = self.game.request(self.currentpet)
-        self.game.triggercommand = self.game.trigger(self.game.request)
+        self.game.triggercommand = self.game.trigger(self.game.request, petgame)
         while self.status == 1:
-            self.requestcommand
-            self.triggercommand
+            self.game.requestcommand = self.game.request(self.currentpet)
+            self.game.triggercommand = self.game.trigger(self.game.request, petgame)
 
             
     
     def startthread(self):
         cycleloopt = threading.Thread(target=self.cycleloop(self.allpets))
         cycleloopt.start()
+        print("leaving start thread")
     
-    def playgame(self):
+    def initgame(self, petgame):
         print ('For help enter the command help.')
         pet1=pet()
         pet1.startpet()
@@ -68,8 +69,9 @@ class game:
         status=1
         startthread = 1
         currentpet= self.getcurrentpet()
-        self.turn(1)
+        self.turn(1, petgame)
         self.startthread()
+        print("thread started")
         
         
     

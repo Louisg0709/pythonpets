@@ -10,8 +10,8 @@ from petsclasses import *
 #mainloop
 petgame=game()
 #playgame(petgame)
-petgame.playgame()
-currentpet=petgame.allpets.getpeti(0)
-petgame.currentpet=currentpet
+petgame.initgame(petgame)
+#currentpet=petgame.allpets.getpeti(0)
+#petgame.currentpet=currentpet
 
-
+print("Game over!sue")
