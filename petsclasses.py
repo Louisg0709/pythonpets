@@ -8,15 +8,6 @@ import time
 import threading
 
 
-def playgame(thegame):
-    status=1
-    startthread = 1
-    currentpet=thegame.getcurrentpet()
-    while status == 1:
-        thecommand=command()
-        requestcommand = thecommand.request(currentpet)
-        thecommand.trigger(requestcommand,thegame)
-
 
 
 #Main game class
@@ -38,11 +29,11 @@ class game:
         return  self.currentpet
     
     #cycle loop
-    def cycleloop(self,zoo):   #allpets is a list of pets see zoo class allpets is a member of this game class
+    def cycleloop(self, allpets):   #allpets is a list of pets see zoo class allpets is a member of this game class
         self.status=1
         while self.status:
-             zoo.deplete()
-             print('cycleloop')
+             allpets.deplete()
+             print('depleted')
              time.sleep(1)
 
 #not tested
@@ -55,8 +46,12 @@ class game:
 
             
     
-    def startthread(self):
-        cycleloopt = threading.Thread(target=self.cycleloop(self.allpets))
+    def startthread(self):   #runs cycle loop used to represent time step which evolves that pet variables
+        print('thread starting')
+        #cycleloopt = threading.Thread(target=self.cycleloop(self.allpets))
+        
+        cycleloopt=threading.Thread(target=self.cycleloop(self.allpets))
+        cycleloopt.setDaemon(True)
         cycleloopt.start()
         print("leaving start thread")
     
@@ -68,12 +63,26 @@ class game:
         self.allpets.addpet(pet1)
         status=1
         startthread = 1
-        currentpet= self.getcurrentpet()
+        #currentpet= self.getcurrentpet()
+        #self.turn(1, petgame)
+        #self.startthread()
+        #print("thread started")
+        return(self.allpets)
+
+
+    def playgame(self, petgame):
+        print ('For help enter the command help.')
+        #pet1=pet()
+        #pet1.startpet()
+        #self.allpets.addpet(pet1)
+        #status=1
+        #startthread = 1
+        #currentpet= self.getcurrentpet()
         self.turn(1, petgame)
-        self.startthread()
+        #self.startthread()
         print("thread started")
         
-        
+                                                                                                    
     
     
 #Main class that deals with your pets
@@ -136,6 +145,7 @@ class pet:
             self.love=10
         print(self.name,'now has an affection of',self.love,'.')
     def deplete(self):
+        #print('depleted')
         score=100
         self.food = self.food - score / 100 * 0.5
         self.clean = self.clean - score / 100* 0.5
