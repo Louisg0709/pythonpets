@@ -45,9 +45,13 @@ class game:
             self.game.triggercommand = self.game.trigger(self.game.request, petgame)
             if self.game.triggercommand == 6:
                 self.status=0
+        #while self.startthreadv == 1:
+        #        self.startthread()
+        #        self.startthreadv = 0
 
 
-            
+    def deplete(self):
+        self.allpets.deplete()        
     
     def startthread(self):   #runs cycle loop used to represent time step which evolves that pet variables
         print('thread starting')

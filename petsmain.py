@@ -18,6 +18,7 @@ def threadFunc():
     status=1
     for i in range(1000000000):
         time.sleep(10)
+        petgame.deplete()
         print("threadfunc", i, petgame.score)
 
 # Create a Thread with a function without any arguments
