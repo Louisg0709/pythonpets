@@ -4,30 +4,26 @@ Created on Fri Nov 19 16:10:34 2021
 Python Pets 
 @author: louis
 """
-
-
-
-
 myzoo=[]
 
 #Importing classes
 from petsclasses import *
 import time
+import threading
 
+
+petgame=game()
 
 def threadFunc():
     status=1
     for i in range(1000000000):
-        time.sleep(2)
-        print("threadfunc", i)
-
+        time.sleep(10)
+        print("threadfunc", i, petgame.score)
 
 # Create a Thread with a function without any arguments
 th = threading.Thread(target=threadFunc)
 
 
-# Start the thread
-th.start()
 # Print some messages on console
 #for i in range(5):
 #   print('Hi from Main Thread')
@@ -35,20 +31,14 @@ th.start()
 # Wait for thread to finish
 #th.join()
 
-
-
 #mainloop
-petgame=game()
+
 #playgame(petgame)
 myzoo=petgame.initgame(petgame)
 
 
-#cycleloopt=threading.Thread(target=threadFunc())
-#cycleloopt.setDaemon(True)
-#cycleloopt.start()
-print("leaving start thread")
-
-
+# Start the thread
+th.start()
 
 print("call play game")
 petgame.playgame(petgame)

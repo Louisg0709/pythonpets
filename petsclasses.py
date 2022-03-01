@@ -33,16 +33,19 @@ class game:
         self.status=1
         while self.status:
              allpets.deplete()
-             print('depleted')
              time.sleep(1)
 
 #not tested
     def turn(self, status, petgame):
+        self.startthreadv = 1
         self.game.requestcommand = self.game.request(self.currentpet)
         self.game.triggercommand = self.game.trigger(self.game.request, petgame)
         while self.status == 1:
             self.game.requestcommand = self.game.request(self.currentpet)
             self.game.triggercommand = self.game.trigger(self.game.request, petgame)
+            if self.game.triggercommand == 6:
+                self.status=0
+
 
             
     
@@ -65,7 +68,6 @@ class game:
         startthread = 1
         #currentpet= self.getcurrentpet()
         #self.turn(1, petgame)
-        #self.startthread()
         #print("thread started")
         return(self.allpets)
 
@@ -76,11 +78,9 @@ class game:
         #pet1.startpet()
         #self.allpets.addpet(pet1)
         #status=1
-        #startthread = 1
         #currentpet= self.getcurrentpet()
         self.turn(1, petgame)
-        #self.startthread()
-        print("thread started")
+
         
                                                                                                     
     
@@ -145,7 +145,7 @@ class pet:
             self.love=10
         print(self.name,'now has an affection of',self.love,'.')
     def deplete(self):
-        #print('depleted')
+        print('depleted')
         score=100
         self.food = self.food - score / 100 * 0.5
         self.clean = self.clean - score / 100* 0.5
@@ -170,21 +170,30 @@ class command:
         event=0
         if self.command == 'help':
             print(self.help)
+            event=0
         if self.command == 'stats':
             currentpet=tgame.currentpet
             currentpet.printstats()
+            event=1
         if self.command == 'feed':
             currentpet=tgame.currentpet
             currentpet.feed()
+            event=2
         if self.command == 'clean':
             currentpet=tgame.currentpet
             currentpet.cleanp()
+            event=3
         if self.command == 'play':
             currentpet=tgame.currentpet
             currentpet.play()
+            tgame.score=tgame.score+1
+            event=4
         if self.command == 'hug':
             currentpet=tgame.currentpet
             currentpet.hug()
+            event=5
+        if self.command == 'quit':
+            event=6
         return event
 #collection class for pets    
 class zoo:
