@@ -6,7 +6,7 @@ Python Pets classes
 """
 import time
 import threading
-
+import sys
 
 
 
@@ -33,6 +33,7 @@ class game:
         self.status=1
         while self.status:
              allpets.deplete()
+             allpets.die()
              time.sleep(1)
 
 #not tested
@@ -43,16 +44,12 @@ class game:
         while self.status == 1:
             self.game.requestcommand = self.game.request(self.currentpet)
             self.game.triggercommand = self.game.trigger(self.game.request, petgame)
-            if self.game.triggercommand == 6:
-                self.status=0
-        #while self.startthreadv == 1:
-        #        self.startthread()
-        #        self.startthreadv = 0
-
 
     def deplete(self):
-        self.allpets.deplete()        
-    
+        if self.status==1:
+            self.allpets.deplete()        
+            self.allpets.die()
+        
     def startthread(self):   #runs cycle loop used to represent time step which evolves that pet variables
         print('thread starting')
         #cycleloopt = threading.Thread(target=self.cycleloop(self.allpets))
@@ -64,10 +61,10 @@ class game:
     
     def initgame(self, petgame):
         print ('For help enter the command help.')
-        pet1=pet()
-        pet1.startpet()
-        self.currentpet=pet1
-        self.allpets.addpet(pet1)
+        self.pet1=pet()
+        self.pet1.startpet()
+        self.currentpet=self.pet1
+        self.allpets.addpet(self.pet1)
         status=1
         startthread = 1
         #currentpet= self.getcurrentpet()
@@ -84,8 +81,10 @@ class game:
         #status=1
         #currentpet= self.getcurrentpet()
         self.turn(1, petgame)
-
-        
+    
+    def endgame(self):
+        print('ended')
+        self.status=0
                                                                                                     
     
     
@@ -101,6 +100,7 @@ class pet:
     def startpet(self):
         self.name = input('What would you like to name your pet?\n')
         print('Your pet is called',self.name)
+        self.score= 100
         self.food = 5
         self.clean = 5
         self.fun = 5
@@ -117,45 +117,54 @@ class pet:
         self.fun = copypet.fun
         self.love = copypet.love
         return self
-    def printstats(self):
+    def printstats(self, game):
         print('Pet stats')
         print('Name:',self.name)
         print('Energy:',self.food)
         print('Happiness:',self.fun)
         print('Cleanliness:',self.clean)
         print('Affection:',self.love)
+        print('Score:',self.score)
     def feed(self):
         print('You have fed',self.name,'.')
         self.food = self.food + 6
         if self.food > 10:
             self.food=10
+            self.score = self.score+50
         print(self.name,'now has an energy of',self.food,'.')
     def cleanp(self):
         print('You have cleaned',self.name,'.')
         self.clean = self.clean + 6
         if self.clean > 10:
             self.clean=10
+            self.score = self.score+50
         print(self.name,'now has a cleanliness of',self.clean,'.')
     def play(self):
         print('You have played with',self.name,'.')
         self.fun = self.fun + 6
         if self.fun > 10:
             self.fun=10
+            self.score = self.score+50
         print(self.name,'now has a happiness of',self.fun,'.')
     def hug(self):
         print('You have hugged',self.name,'.')
         self.love = self.love + 6
         if self.love > 10:
             self.love=10
+            self.score = self.score+50
         print(self.name,'now has an affection of',self.love,'.')
     def deplete(self):
-        print('depleted')
+        #print('depleted')
         score=100
-        self.food = self.food - score / 100 * 0.5
-        self.clean = self.clean - score / 100* 0.5
-        self.fun = self.fun - score/ 100* 0.5
-        self.love = self.love - score / 100* 0.5
-    
+        self.food = self.food - self.score / 400 * 0.5
+        self.clean = self.clean - self.score / 400 * 0.5
+        self.fun = self.fun - self.score/ 400 * 0.5
+        self.love = self.love - self.score / 400 * 0.5
+    def die(self):
+        if self.love < 0 or self.clean < 0 or self.food < 0 or self.fun < 0:
+            print ('Your pet',self.name,'has died.')
+            print ('Your final score was',self.score)
+            sys.exit()
         
 #Class that deals with commands
 class command:
@@ -177,7 +186,7 @@ class command:
             event=0
         if self.command == 'stats':
             currentpet=tgame.currentpet
-            currentpet.printstats()
+            currentpet.printstats(tgame)
             event=1
         if self.command == 'feed':
             currentpet=tgame.currentpet
@@ -224,5 +233,8 @@ class zoo:
         for pet in self.pets:
            pet.deplete()
 
+    def die(self):     
+        for pet in self.pets:
+            pet.die()
         return None
         
